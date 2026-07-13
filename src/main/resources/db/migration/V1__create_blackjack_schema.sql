@@ -23,6 +23,7 @@ CREATE TABLE users
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
+
     CONSTRAINT fk_users_roles
         FOREIGN KEY (role_id)
             REFERENCES roles(id)
@@ -88,7 +89,7 @@ CREATE TABLE cards
 
     suit VARCHAR(20) NOT NULL,
 
-    rank VARCHAR(20) NOT NULL,
+    card_rank VARCHAR(20) NOT NULL,
 
     value INT NOT NULL,
 

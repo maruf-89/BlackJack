@@ -30,7 +30,9 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request) {
+    public String login(
+            @RequestBody LoginRequest request
+    ) {
 
 
         authenticationManager.authenticate(
@@ -41,7 +43,9 @@ public class AuthController {
         );
 
 
-        return jwtService.generateToken(request.getUsername());
+        return jwtService.generateToken(
+                request.getUsername()
+        );
 
     }
 

@@ -1,17 +1,32 @@
 package blackjack.security;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 
+
 @Service
 public class JwtService {
 
-    private final SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+
+    private final String secret =
+            "blackjack-secret-key-blackjack-secret-key-123456";
+
+
+    private final long expiration =
+            1000 * 60 * 60;
+
+
+    private SecretKey getKey() {
+
+        return Keys.hmacShaKeyFor(
+                secret.getBytes()
+        );
+
+    }
 
 
     public String generateToken(String username) {
@@ -20,22 +35,10 @@ public class JwtService {
                 .subject(username)
                 .issuedAt(new Date())
                 .expiration(
-                        new Date(System.currentTimeMillis() + 86400000)
+                        new Date(System.currentTimeMillis() + expiration)
                 )
-                .signWith(key)
+                .signWith(getKey())
                 .compact();
-
-    }
-
-
-    public String extractUsername(String token) {
-
-        return Jwts.parser()
-                .verifyWith(key)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getSubject();
 
     }
 

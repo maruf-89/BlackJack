@@ -17,7 +17,6 @@ public class AuthController {
 
     private final JwtService jwtService;
 
-
     public AuthController(
             AuthenticationManager authenticationManager,
             JwtService jwtService
@@ -27,7 +26,6 @@ public class AuthController {
         this.jwtService = jwtService;
 
     }
-
 
     @PostMapping("/login")
     public String login(

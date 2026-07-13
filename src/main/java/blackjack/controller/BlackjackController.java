@@ -1,5 +1,6 @@
 package blackjack.controller;
 
+import blackjack.game.GameResult;
 import blackjack.game.GameState;
 import blackjack.service.BlackjackService;
 
@@ -44,6 +45,15 @@ public class BlackjackController {
     ) {
 
         return blackjackService.hit(gameId);
+
+    }
+
+    @GetMapping("/{gameId}/stand")
+    public GameResult stand(
+            @PathVariable String gameId
+    ) {
+
+        return blackjackService.stand(gameId);
 
     }
 

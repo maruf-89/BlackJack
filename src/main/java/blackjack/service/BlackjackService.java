@@ -1,5 +1,6 @@
 package blackjack.service;
 
+import blackjack.game.GameResult;
 import blackjack.game.GameState;
 
 import org.springframework.stereotype.Service;
@@ -51,6 +52,58 @@ public class BlackjackService {
         );
 
         return game;
+
+    }
+
+    public GameResult stand(String gameId) {
+
+        GameState game = games.get(gameId);
+
+        if (game == null) {
+            throw new RuntimeException("Game not found");
+        }
+
+        while (game.getDealer().getValue() < 17) {
+
+            game.getDealer().addCard(
+                    game.getDeck().drawCard()
+            );
+
+        }
+
+        int playerValue = game.getPlayer().getValue();
+        int dealerValue = game.getDealer().getValue();
+
+        String result;
+
+        if (playerValue > 21) {
+
+            result = "PLAYER_BUST";
+
+        } else if (dealerValue > 21) {
+
+            result = "PLAYER_WIN";
+
+        } else if (playerValue > dealerValue) {
+
+            result = "PLAYER_WIN";
+
+        } else if (dealerValue > playerValue) {
+
+            result = "DEALER_WIN";
+
+        } else {
+
+            result = "PUSH";
+
+        }
+
+        games.remove(gameId);
+
+        return new GameResult(
+                game,
+                result
+        );
 
     }
 

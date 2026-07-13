@@ -15,9 +15,10 @@ public class BlackjackService {
     private final Map<String, GameState> games =
             new ConcurrentHashMap<>();
 
-    public String startGame() {
+    public String startGame(double bet) {
 
         GameState game = new GameState();
+        game.setBet(bet);
 
         game.getPlayer().addCard(game.getDeck().drawCard());
         game.getDealer().addCard(game.getDeck().drawCard());

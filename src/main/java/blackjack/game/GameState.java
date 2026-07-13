@@ -2,19 +2,13 @@ package blackjack.game;
 
 public class GameState {
 
-    private final Deck deck;
+    private final Deck deck = new Deck();
 
-    private final Hand player;
+    private final Hand player = new Hand();
 
-    private final Hand dealer;
+    private final Hand dealer = new Hand();
 
-    public GameState() {
-
-        deck = new Deck();
-        player = new Hand();
-        dealer = new Hand();
-
-    }
+    private double bet;
 
     public Deck getDeck() {
 
@@ -31,6 +25,18 @@ public class GameState {
     public Hand getDealer() {
 
         return dealer;
+
+    }
+
+    public double getBet() {
+
+        return bet;
+
+    }
+
+    public void setBet(double bet) {
+
+        this.bet = bet;
 
     }
 

@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import blackjack.dto.StartGameRequest;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/blackjack")
@@ -23,10 +26,14 @@ public class BlackjackController {
 
     }
 
-    @GetMapping("/start")
-    public String startGame() {
+    @PostMapping("/start")
+    public String startGame(
+            @RequestBody StartGameRequest request
+    ) {
 
-        return blackjackService.startGame();
+        return blackjackService.startGame(
+                request.getBet()
+        );
 
     }
 

@@ -21,7 +21,6 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-
     public UserService(
             UserRepository userRepository,
             RoleRepository roleRepository,
@@ -34,16 +33,13 @@ public class UserService {
 
     }
 
-
     public List<User> getAllUsers() {
 
         return userRepository.findAll();
 
     }
 
-
     public User register(RegisterRequest request) {
-
 
         Role userRole = roleRepository
                 .findByName("USER")
@@ -51,22 +47,27 @@ public class UserService {
                         () -> new RuntimeException("USER role missing")
                 );
 
-
         User user = new User();
 
-
         user.setUsername(request.getUsername());
-
         user.setEmail(request.getEmail());
-
-        user.setPassword(
-                passwordEncoder.encode(request.getPassword())
-        );
-
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(userRole);
-
         user.setBalance(new BigDecimal("1000.00"));
 
+        return userRepository.save(user);
+
+    }
+
+    public User makeAdmin(Long userId) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Role adminRole = roleRepository.findByName("ADMIN")
+                .orElseThrow(() -> new RuntimeException("ADMIN role missing"));
+
+        user.setRole(adminRole);
 
         return userRepository.save(user);
 

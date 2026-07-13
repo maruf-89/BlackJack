@@ -31,8 +31,8 @@ public class User {
     private String password;
 
 
-    @Column(nullable = false)
-    private BigDecimal balance;
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal balance = new BigDecimal("1000.00");
 
 
     private LocalDateTime createdAt;
@@ -54,5 +54,9 @@ public class User {
     @PrePersist
     private void createdAt() {
         createdAt = LocalDateTime.now();
+
+        if (balance == null) {
+            balance = new BigDecimal("1000.00");
+        }
     }
 }

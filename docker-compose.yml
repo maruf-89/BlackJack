@@ -1,0 +1,36 @@
+services:
+
+  mysql:
+
+    image: mysql:8.4
+
+    container_name: blackjack-mysql
+
+    restart: always
+
+
+    environment:
+
+      MYSQL_DATABASE: blackjack_database
+
+      MYSQL_USER: blackjack_user
+
+      MYSQL_PASSWORD: blackjack_password
+
+      MYSQL_ROOT_PASSWORD: root_password
+
+
+    ports:
+
+      - "3307:3306"
+
+
+    volumes:
+
+      - mysql_data:/var/lib/mysql
+
+
+
+volumes:
+
+  mysql_data:

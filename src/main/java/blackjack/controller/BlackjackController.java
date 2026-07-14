@@ -1,6 +1,7 @@
 package blackjack.controller;
 
 import blackjack.dto.StartGameRequest;
+import blackjack.dto.StartGameResponse;
 import blackjack.game.GameState;
 import blackjack.service.BlackjackService;
 
@@ -27,15 +28,19 @@ public class BlackjackController {
 
 
     @PostMapping("/start")
-    public String startGame(
+    public StartGameResponse startGame(
             Principal principal,
             @RequestBody StartGameRequest request
     ) {
 
-        return blackjackService.startGame(
-                principal.getName(),
-                request.getBet()
-        );
+        String gameId =
+                blackjackService.startGame(
+                        principal.getName(),
+                        request.getBet()
+                );
+
+
+        return new StartGameResponse(gameId);
 
     }
 

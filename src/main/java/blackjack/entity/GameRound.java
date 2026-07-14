@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -45,12 +44,9 @@ public class GameRound {
 
 
     @OneToMany(
-            mappedBy = "gameRound",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
+            mappedBy="gameRound",
+            cascade = CascadeType.ALL
     )
-    private List<Card> cards =
-            new ArrayList<>();
-
+    private List<Card> cards;
 
 }

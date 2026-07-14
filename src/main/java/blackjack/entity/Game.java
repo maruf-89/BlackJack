@@ -1,12 +1,12 @@
 package blackjack.entity;
 
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -22,13 +22,22 @@ public class Game {
     private Long id;
 
 
+    @Column(
+            nullable = false,
+            unique = true
+    )
+    private String gameId;
+
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name="user_id")
     private User user;
+
 
 
     @Column(nullable = false)
     private String status;
+
 
 
     private int playerScore;
@@ -37,7 +46,6 @@ public class Game {
     private int dealerScore;
 
 
-    @Column(nullable = false)
     private BigDecimal betAmount;
 
 
@@ -50,11 +58,9 @@ public class Game {
 
     @OneToMany(
             mappedBy = "game",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
+            cascade = CascadeType.ALL
     )
-    private List<GameRound> rounds =
-            new ArrayList<>();
+    private List<GameRound> rounds;
 
 
 

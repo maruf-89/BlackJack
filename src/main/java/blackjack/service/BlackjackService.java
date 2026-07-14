@@ -2,6 +2,7 @@ package blackjack.service;
 
 
 import blackjack.dto.GameResponse;
+
 import blackjack.entity.Card;
 import blackjack.entity.Game;
 import blackjack.entity.GameRound;
@@ -10,16 +11,19 @@ import blackjack.entity.User;
 import blackjack.game.BlackjackGame;
 import blackjack.game.GameResult;
 import blackjack.game.GameState;
+
+import blackjack.repository.CardRepository;
 import blackjack.repository.GameRepository;
+import blackjack.repository.GameRoundRepository;
 import blackjack.repository.UserRepository;
 
 import org.springframework.stereotype.Service;
 
 
 import java.math.BigDecimal;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 
 
@@ -32,28 +36,29 @@ public class BlackjackService {
 
     private final GameRepository gameRepository;
 
+    private final GameRoundRepository gameRoundRepository;
 
-
-    private final Map<String, BlackjackGame> games =
-            new ConcurrentHashMap<>();
-
-
-    private final Map<String,String> players =
-            new ConcurrentHashMap<>();
-
+    private final CardRepository cardRepository;
 
 
 
     public BlackjackService(
             UserRepository userRepository,
-            GameRepository gameRepository
+            GameRepository gameRepository,
+            GameRoundRepository gameRoundRepository,
+            CardRepository cardRepository
     ){
 
         this.userRepository = userRepository;
 
         this.gameRepository = gameRepository;
 
+        this.gameRoundRepository = gameRoundRepository;
+
+        this.cardRepository = cardRepository;
+
     }
+
 
 
 
@@ -72,6 +77,7 @@ public class BlackjackService {
 
 
 
+
         if(
                 user.getBalance()
                         .compareTo(bet) < 0
@@ -86,6 +92,7 @@ public class BlackjackService {
 
 
 
+
         user.setBalance(
                 user.getBalance()
                         .subtract(bet)
@@ -93,6 +100,62 @@ public class BlackjackService {
 
 
         userRepository.save(user);
+
+
+
+
+
+        Game game =
+                new Game();
+
+
+
+        game.setGameId(
+                UUID.randomUUID()
+                        .toString()
+        );
+
+
+
+        game.setUser(user);
+
+
+
+        game.setStatus(
+                "RUNNING"
+        );
+
+
+
+        game.setBetAmount(
+                bet
+        );
+
+
+
+        gameRepository.save(game);
+
+
+
+
+
+
+
+        GameRound round =
+                new GameRound();
+
+
+
+        round.setGame(game);
+
+
+        round.setRoundNumber(1);
+
+
+
+        gameRoundRepository.save(round);
+
+
 
 
 
@@ -110,29 +173,22 @@ public class BlackjackService {
 
 
 
-        String gameId =
-                UUID.randomUUID()
-                        .toString();
 
-
-
-
-        games.put(
-                gameId,
+        saveCards(
+                round,
                 blackjackGame
         );
 
 
-        players.put(
-                gameId,
-                username
-        );
 
 
 
-        return gameId;
+        return game.getGameId();
 
     }
+
+
+
 
 
 
@@ -145,12 +201,25 @@ public class BlackjackService {
     ){
 
 
+
         BlackjackGame game =
-                findGame(gameId);
+                loadGame(gameId);
+
 
 
 
         game.hit();
+
+
+
+
+
+        saveCards(
+                getRound(gameId),
+                game
+        );
+
+
 
 
 
@@ -161,11 +230,13 @@ public class BlackjackService {
 
 
 
+
         return response(
                 game.getState()
         );
 
     }
+
 
 
 
@@ -179,12 +250,27 @@ public class BlackjackService {
     ){
 
 
+
         BlackjackGame game =
-                findGame(gameId);
+                loadGame(gameId);
+
+
 
 
 
         game.stand();
+
+
+
+
+
+        saveCards(
+                getRound(gameId),
+                game
+        );
+
+
+
 
 
 
@@ -195,11 +281,15 @@ public class BlackjackService {
 
 
 
+
+
         return response(
                 game.getState()
         );
 
     }
+
+
 
 
 
@@ -213,12 +303,231 @@ public class BlackjackService {
     ){
 
 
+
+        BlackjackGame game =
+                loadGame(gameId);
+
+
+
+
         return response(
-                findGame(gameId)
-                        .getState()
+                game.getState()
         );
 
     }
+
+
+
+
+
+
+
+
+
+    private BlackjackGame loadGame(
+            String gameId
+    ){
+
+
+
+        Game databaseGame =
+                gameRepository
+                        .findByGameId(gameId)
+                        .orElseThrow(
+                                () ->
+                                        new RuntimeException(
+                                                "Game not found"
+                                        )
+                        );
+
+
+
+
+
+        BlackjackGame game =
+                new BlackjackGame(false);
+
+
+
+
+
+        GameRound round =
+                getRound(gameId);
+
+
+
+
+
+        List<Card> cards =
+                cardRepository
+                        .findByGameRound(round);
+
+
+
+
+
+        game.restore(cards);
+
+
+
+
+
+        game.getState()
+                .setBet(
+                        databaseGame
+                                .getBetAmount()
+                                .doubleValue()
+                );
+
+
+
+
+
+        return game;
+
+    }
+
+
+
+
+
+
+
+
+
+    private GameRound getRound(
+            String gameId
+    ){
+
+
+        Game game =
+                gameRepository
+                        .findByGameId(gameId)
+                        .orElseThrow();
+
+
+
+
+        return gameRoundRepository
+                .findByGame(game)
+                .get(0);
+
+    }
+
+
+
+
+
+
+
+
+
+    private void saveCards(
+            GameRound round,
+            BlackjackGame game
+    ){
+
+
+
+        List<Card> cards =
+                new ArrayList<>();
+
+
+
+
+
+        game.getState()
+                .getPlayer()
+                .getCards()
+                .forEach(
+                        c -> {
+
+                            Card card =
+                                    convert(c);
+
+
+                            card.setGameRound(round);
+
+
+                            cards.add(card);
+
+                        }
+                );
+
+
+
+
+
+
+        game.getState()
+                .getDealer()
+                .getCards()
+                .forEach(
+                        c -> {
+
+                            Card card =
+                                    convert(c);
+
+
+                            card.setGameRound(round);
+
+
+                            cards.add(card);
+
+                        }
+                );
+
+
+
+
+
+
+        cardRepository.saveAll(cards);
+
+    }
+
+
+
+
+
+
+
+
+
+    private Card convert(
+            blackjack.game.Card gameCard
+    ){
+
+
+
+        Card card =
+                new Card();
+
+
+
+        card.setSuit(
+                gameCard.getSuit()
+        );
+
+
+
+        card.setCardRank(
+                gameCard.getRank()
+        );
+
+
+
+        card.setValue(
+                gameCard.getValue()
+        );
+
+
+
+        return card;
+
+    }
+
+
 
 
 
@@ -232,6 +541,7 @@ public class BlackjackService {
     ){
 
 
+
         if(
                 state.getStatus()
                         != blackjack.game.GameStatus.FINISHED
@@ -243,21 +553,16 @@ public class BlackjackService {
 
 
 
-        User user =
-                userRepository
-                        .findByUsername(
-                                players.get(gameId)
-                        )
-                        .orElseThrow();
-
 
 
 
         Game game =
-                new Game();
+                gameRepository
+                        .findByGameId(gameId)
+                        .orElseThrow();
 
 
-        game.setUser(user);
+
 
 
         game.setStatus(
@@ -266,10 +571,14 @@ public class BlackjackService {
         );
 
 
+
+
         game.setPlayerScore(
                 state.getPlayer()
                         .getValue()
         );
+
+
 
 
         game.setDealerScore(
@@ -277,12 +586,6 @@ public class BlackjackService {
                         .getValue()
         );
 
-
-        game.setBetAmount(
-                BigDecimal.valueOf(
-                        state.getBet()
-                )
-        );
 
 
 
@@ -293,6 +596,8 @@ public class BlackjackService {
 
 
 
+
+
         gameRepository.save(game);
 
 
@@ -300,11 +605,12 @@ public class BlackjackService {
 
 
         payout(
-                user,
+                game.getUser(),
                 state
         );
 
     }
+
 
 
 
@@ -327,6 +633,8 @@ public class BlackjackService {
 
 
 
+
+
         if(
                 state.getResult()
                         == GameResult.PLAYER_WIN
@@ -342,8 +650,9 @@ public class BlackjackService {
                             )
             );
 
-
         }
+
+
 
 
 
@@ -362,40 +671,12 @@ public class BlackjackService {
 
 
 
+
+
         userRepository.save(user);
 
-
     }
 
-
-
-
-
-
-
-
-    private BlackjackGame findGame(
-            String id
-    ){
-
-
-        BlackjackGame game =
-                games.get(id);
-
-
-
-        if(game == null){
-
-            throw new RuntimeException(
-                    "Game not found"
-            );
-
-        }
-
-
-        return game;
-
-    }
 
 
 
@@ -445,7 +726,6 @@ public class BlackjackService {
                 state.getResult()
 
         );
-
 
     }
 

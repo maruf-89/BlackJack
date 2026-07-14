@@ -3,9 +3,12 @@ package blackjack.game;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class Hand {
 
+
     private final List<Card> cards = new ArrayList<>();
+
 
     public void addCard(Card card) {
 
@@ -13,22 +16,27 @@ public class Hand {
 
     }
 
+
     public List<Card> getCards() {
 
         return cards;
 
     }
 
+
     public int getValue() {
 
-        int value = 0;
+        int total = 0;
+
         int aces = 0;
 
-        for (Card card : cards) {
 
-            value += card.getValue();
+        for(Card card : cards) {
 
-            if (card.getRank().equals("A")) {
+            total += card.getValue();
+
+
+            if(card.getRank().equals("A")) {
 
                 aces++;
 
@@ -36,14 +44,24 @@ public class Hand {
 
         }
 
-        while (value > 21 && aces > 0) {
 
-            value -= 10;
+        while(total > 21 && aces > 0) {
+
+            total -= 10;
+
             aces--;
 
         }
 
-        return value;
+
+        return total;
+
+    }
+
+
+    public boolean isBusted() {
+
+        return getValue() > 21;
 
     }
 

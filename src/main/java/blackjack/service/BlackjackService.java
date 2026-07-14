@@ -67,6 +67,7 @@ public class BlackjackService {
 
         GameState state = new GameState();
 
+
         state.setBet(
                 bet.doubleValue()
         );
@@ -125,10 +126,24 @@ public class BlackjackService {
         }
 
 
+        if(state.getPlayer().isBusted()) {
+
+            throw new RuntimeException("Player already busted");
+
+        }
+
+
         state.getPlayer()
                 .addCard(
                         state.getDeck().drawCard()
                 );
+
+
+        if(state.getPlayer().isBusted()) {
+
+            return state;
+
+        }
 
 
         return state;

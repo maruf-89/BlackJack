@@ -1,12 +1,15 @@
 package blackjack.game;
 
+
 public class Card {
+
 
     private final String suit;
 
     private final String rank;
 
     private final int value;
+
 
     public Card(
             String suit,
@@ -15,10 +18,13 @@ public class Card {
     ) {
 
         this.suit = suit;
+
         this.rank = rank;
+
         this.value = value;
 
     }
+
 
     public String getSuit() {
 
@@ -26,15 +32,25 @@ public class Card {
 
     }
 
+
     public String getRank() {
 
         return rank;
 
     }
 
+
     public int getValue() {
 
         return value;
+
+    }
+
+
+    @Override
+    public String toString() {
+
+        return rank + " of " + suit;
 
     }
 

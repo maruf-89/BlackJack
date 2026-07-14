@@ -1,12 +1,16 @@
 package blackjack.game;
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+
 public class Deck {
 
+
     private final List<Card> cards = new ArrayList<>();
+
 
     public Deck() {
 
@@ -17,19 +21,33 @@ public class Deck {
                 "Spades"
         };
 
+
         String[] ranks = {
-                "2", "3", "4", "5", "6",
-                "7", "8", "9", "10",
-                "J", "Q", "K", "A"
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10",
+                "J",
+                "Q",
+                "K",
+                "A"
         };
 
-        for (String suit : suits) {
 
-            for (String rank : ranks) {
+        for(String suit : suits) {
+
+            for(String rank : ranks) {
+
 
                 int value;
 
-                switch (rank) {
+
+                switch(rank) {
 
                     case "J":
                     case "Q":
@@ -37,14 +55,17 @@ public class Deck {
                         value = 10;
                         break;
 
+
                     case "A":
                         value = 11;
                         break;
+
 
                     default:
                         value = Integer.parseInt(rank);
 
                 }
+
 
                 cards.add(
                         new Card(
@@ -58,13 +79,29 @@ public class Deck {
 
         }
 
+
+        shuffle();
+
+    }
+
+
+    public void shuffle() {
+
         Collections.shuffle(cards);
 
     }
 
+
     public Card drawCard() {
 
-        return cards.removeFirst();
+        return cards.remove(0);
+
+    }
+
+
+    public int size() {
+
+        return cards.size();
 
     }
 

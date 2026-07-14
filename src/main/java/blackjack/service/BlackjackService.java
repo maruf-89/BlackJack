@@ -2,6 +2,7 @@ package blackjack.service;
 
 import blackjack.entity.Game;
 import blackjack.entity.User;
+import blackjack.game.BlackjackGame;
 import blackjack.game.GameState;
 import blackjack.repository.GameRepository;
 import blackjack.repository.UserRepository;
@@ -24,7 +25,7 @@ public class BlackjackService {
     private final UserRepository userRepository;
 
 
-    private final Map<String, GameState> games =
+    private final Map<String, BlackjackGame> games =
             new ConcurrentHashMap<>();
 
 
@@ -34,6 +35,7 @@ public class BlackjackService {
     ) {
 
         this.gameRepository = gameRepository;
+
         this.userRepository = userRepository;
 
     }
@@ -65,36 +67,8 @@ public class BlackjackService {
                 );
 
 
-        GameState state = new GameState();
-
-
-        state.setBet(
-                bet.doubleValue()
-        );
-
-
-        state.getPlayer()
-                .addCard(
-                        state.getDeck().drawCard()
-                );
-
-
-        state.getDealer()
-                .addCard(
-                        state.getDeck().drawCard()
-                );
-
-
-        state.getPlayer()
-                .addCard(
-                        state.getDeck().drawCard()
-                );
-
-
-        state.getDealer()
-                .addCard(
-                        state.getDeck().drawCard()
-                );
+        BlackjackGame game =
+                new BlackjackGame();
 
 
         String gameId =
@@ -103,7 +77,7 @@ public class BlackjackService {
 
         games.put(
                 gameId,
-                state
+                game
         );
 
 
@@ -116,30 +90,21 @@ public class BlackjackService {
             String gameId
     ) {
 
-        GameState state = games.get(gameId);
+        BlackjackGame game =
+                games.get(gameId);
 
 
-        if(state == null) {
+        if(game == null) {
 
             throw new RuntimeException("Game not found");
 
         }
 
 
-        if(state.getPlayer().isBusted()) {
-
-            throw new RuntimeException("Player already busted");
-
-        }
+        game.hit();
 
 
-        state.getPlayer()
-                .addCard(
-                        state.getDeck().drawCard()
-                );
-
-
-        return state;
+        return game.getState();
 
     }
 
@@ -148,27 +113,21 @@ public class BlackjackService {
             String gameId
     ) {
 
-        GameState state = games.get(gameId);
+        BlackjackGame game =
+                games.get(gameId);
 
 
-        if(state == null) {
+        if(game == null) {
 
             throw new RuntimeException("Game not found");
 
         }
 
 
-        while(state.getDealer().getValue() < 17) {
-
-            state.getDealer()
-                    .addCard(
-                            state.getDeck().drawCard()
-                    );
-
-        }
+        game.stand();
 
 
-        return state;
+        return game.getState();
 
     }
 
@@ -177,7 +136,18 @@ public class BlackjackService {
             String gameId
     ) {
 
-        return games.get(gameId);
+        BlackjackGame game =
+                games.get(gameId);
+
+
+        if(game == null) {
+
+            throw new RuntimeException("Game not found");
+
+        }
+
+
+        return game.getState();
 
     }
 

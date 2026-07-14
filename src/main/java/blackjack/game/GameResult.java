@@ -1,31 +1,12 @@
 package blackjack.game;
 
-public class GameResult {
 
-    private final GameState game;
+public enum GameResult {
 
-    private final String result;
+    PLAYER_WIN,
 
-    public GameResult(
-            GameState game,
-            String result
-    ) {
+    DEALER_WIN,
 
-        this.game = game;
-        this.result = result;
-
-    }
-
-    public GameState getGame() {
-
-        return game;
-
-    }
-
-    public String getResult() {
-
-        return result;
-
-    }
+    DRAW
 
 }

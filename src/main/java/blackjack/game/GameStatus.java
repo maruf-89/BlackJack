@@ -1,4 +1,10 @@
 package blackjack.game;
 
-public class GameStatus {
+
+public enum GameStatus {
+
+    ACTIVE,
+
+    FINISHED
+
 }

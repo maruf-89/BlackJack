@@ -11,7 +11,7 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "games")
+@Table(name="games")
 @Getter
 @Setter
 public class Game {
@@ -22,11 +22,10 @@ public class Game {
     private Long id;
 
 
-    @Column(
-            nullable = false,
-            unique = true
-    )
+
+    @Column(nullable=false,unique=true)
     private String gameId;
+
 
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -35,7 +34,6 @@ public class Game {
 
 
 
-    @Column(nullable = false)
     private String status;
 
 
@@ -43,13 +41,17 @@ public class Game {
     private int playerScore;
 
 
+
     private int dealerScore;
+
 
 
     private BigDecimal betAmount;
 
 
+
     private String result;
+
 
 
     private LocalDateTime createdAt;
@@ -57,15 +59,15 @@ public class Game {
 
 
     @OneToMany(
-            mappedBy = "game",
-            cascade = CascadeType.ALL
+            mappedBy="game",
+            cascade=CascadeType.ALL
     )
     private List<GameRound> rounds;
 
 
 
     @PrePersist
-    private void createdAt(){
+    public void createdAt(){
 
         createdAt = LocalDateTime.now();
 

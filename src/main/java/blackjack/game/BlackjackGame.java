@@ -1,10 +1,14 @@
 package blackjack.game;
 
+
 import blackjack.entity.Card;
 
 import java.util.List;
 
+
+
 public class BlackjackGame {
+
 
 
     private final Deck deck =
@@ -15,104 +19,130 @@ public class BlackjackGame {
             new GameState();
 
 
-    public BlackjackGame() {
+
+
+    public BlackjackGame(){
 
         startNewGame();
 
     }
 
 
-    public BlackjackGame(
-            boolean newGame
-    ) {
 
-        if (newGame) {
 
+    public BlackjackGame(boolean newGame){
+
+        if(newGame){
             startNewGame();
-
         }
 
     }
 
 
-    private void startNewGame() {
+
+
+
+    private void startNewGame(){
+
 
         state.getPlayer()
-                .addCard(
-                        deck.drawCard()
-                );
+                .addCard(deck.drawCard());
+
 
         state.getDealer()
-                .addCard(
-                        deck.drawCard()
-                );
+                .addCard(deck.drawCard());
+
 
         state.getPlayer()
-                .addCard(
-                        deck.drawCard()
-                );
+                .addCard(deck.drawCard());
+
 
         state.getDealer()
-                .addCard(
-                        deck.drawCard()
-                );
+                .addCard(deck.drawCard());
 
     }
 
 
-    /**
-     * Återskapar ett spel från databasen.
-     */
+
+
+
     public void restore(
             List<Card> cards
-    ) {
+    ){
+
+
 
         state.getPlayer()
                 .getCards()
                 .clear();
+
+
 
         state.getDealer()
                 .getCards()
                 .clear();
 
 
-        for (Card card : cards) {
 
-            blackjack.game.Card gameCard =
+        int split =
+                cards.size()/2;
+
+
+
+
+        for(int i=0;i<cards.size();i++){
+
+
+
+            Card dbCard =
+                    cards.get(i);
+
+
+
+            blackjack.game.Card card =
                     new blackjack.game.Card(
-                            card.getSuit(),
-                            card.getCardRank(),
-                            card.getValue()
+                            dbCard.getSuit(),
+                            dbCard.getCardRank(),
+                            dbCard.getValue()
                     );
 
 
-            if ("PLAYER".equals(card.getOwner())) {
+
+
+            if(i < split){
+
 
                 state.getPlayer()
-                        .addCard(gameCard);
+                        .addCard(card);
+
 
             }
-            else if ("DEALER".equals(card.getOwner())) {
+            else{
+
 
                 state.getDealer()
-                        .addCard(gameCard);
+                        .addCard(card);
+
 
             }
 
         }
 
+
     }
 
 
-    public void hit() {
 
-        if (
+
+
+
+    public void hit(){
+
+        if(
                 state.getStatus()
-                        != GameStatus.RUNNING
-        ) {
-
+                        !=GameStatus.RUNNING
+        ){
             return;
-
         }
 
 
@@ -122,14 +152,16 @@ public class BlackjackGame {
                 );
 
 
-        if (
+
+        if(
                 state.getPlayer()
                         .isBusted()
-        ) {
+        ){
 
             state.setResult(
                     GameResult.DEALER_WIN
             );
+
 
             state.setStatus(
                     GameStatus.FINISHED
@@ -140,22 +172,25 @@ public class BlackjackGame {
     }
 
 
-    public void stand() {
 
-        if (
+
+
+    public void stand(){
+
+
+        if(
                 state.getStatus()
-                        != GameStatus.RUNNING
-        ) {
-
+                        !=GameStatus.RUNNING
+        ){
             return;
-
         }
 
 
-        while (
+
+        while(
                 state.getDealer()
-                        .getValue() < 17
-        ) {
+                        .getValue()<17
+        ){
 
             state.getDealer()
                     .addCard(
@@ -170,37 +205,40 @@ public class BlackjackGame {
     }
 
 
-    private void calculateResult() {
+
+
+
+    private void calculateResult(){
 
         int player =
                 state.getPlayer()
                         .getValue();
+
 
         int dealer =
                 state.getDealer()
                         .getValue();
 
 
-        if (
-                dealer > 21 ||
-                        player > dealer
-        ) {
+
+        if(
+                dealer>21 ||
+                        player>dealer
+        ){
 
             state.setResult(
                     GameResult.PLAYER_WIN
             );
 
         }
-        else if (
-                player == dealer
-        ) {
+        else if(player==dealer){
 
             state.setResult(
                     GameResult.DRAW
             );
 
         }
-        else {
+        else{
 
             state.setResult(
                     GameResult.DEALER_WIN
@@ -216,10 +254,10 @@ public class BlackjackGame {
     }
 
 
-    public GameState getState() {
 
+
+    public GameState getState(){
         return state;
-
     }
 
 }

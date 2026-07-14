@@ -45,8 +45,9 @@ public class GameRound {
 
     @OneToMany(
             mappedBy="gameRound",
-            cascade = CascadeType.ALL
+            cascade=CascadeType.ALL
     )
     private List<Card> cards;
+
 
 }

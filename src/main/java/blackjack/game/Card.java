@@ -1,5 +1,6 @@
 package blackjack.game;
 
+
 public class Card {
 
 
@@ -10,42 +11,47 @@ public class Card {
     private final int value;
 
 
+
     public Card(
             String suit,
             String rank,
             int value
-    ) {
+    ){
 
-        this.suit = suit;
-        this.rank = rank;
-        this.value = value;
+        this.suit=suit;
+        this.rank=rank;
+        this.value=value;
 
     }
 
 
-    public String getSuit() {
+
+    public String getSuit(){
 
         return suit;
 
     }
 
 
-    public String getRank() {
+
+    public String getRank(){
 
         return rank;
 
     }
 
 
-    public int getValue() {
+
+    public int getValue(){
 
         return value;
 
     }
 
 
+
     @Override
-    public String toString() {
+    public String toString(){
 
         return rank + " of " + suit;
 

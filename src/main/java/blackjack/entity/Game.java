@@ -59,8 +59,9 @@ public class Game {
 
 
     @OneToMany(
-            mappedBy="game",
-            cascade=CascadeType.ALL
+            mappedBy = "game",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
     )
     private List<GameRound> rounds;
 

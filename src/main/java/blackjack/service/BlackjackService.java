@@ -139,9 +139,31 @@ public class BlackjackService {
                 );
 
 
-        if(state.getPlayer().isBusted()) {
+        return state;
 
-            return state;
+    }
+
+
+    public GameState stand(
+            String gameId
+    ) {
+
+        GameState state = games.get(gameId);
+
+
+        if(state == null) {
+
+            throw new RuntimeException("Game not found");
+
+        }
+
+
+        while(state.getDealer().getValue() < 17) {
+
+            state.getDealer()
+                    .addCard(
+                            state.getDeck().drawCard()
+                    );
 
         }
 

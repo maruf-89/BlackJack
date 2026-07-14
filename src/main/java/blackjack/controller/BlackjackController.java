@@ -50,6 +50,16 @@ public class BlackjackController {
     }
 
 
+    @PostMapping("/{gameId}/stand")
+    public GameState stand(
+            @PathVariable String gameId
+    ) {
+
+        return blackjackService.stand(gameId);
+
+    }
+
+
     @GetMapping("/{gameId}")
     public GameState getGame(
             @PathVariable String gameId

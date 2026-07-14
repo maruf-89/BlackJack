@@ -1,6 +1,5 @@
 package blackjack.game;
 
-
 public class Card {
 
 
@@ -18,9 +17,7 @@ public class Card {
     ) {
 
         this.suit = suit;
-
         this.rank = rank;
-
         this.value = value;
 
     }

@@ -4,86 +4,146 @@ package blackjack.game;
 public class BlackjackGame {
 
 
-    private final GameState state;
+    private final Deck deck =
+            new Deck();
+
+
+    private final GameState state =
+            new GameState();
 
 
     public BlackjackGame() {
 
-        state = new GameState();
-
-        dealInitialCards();
-
-    }
-
-
-    private void dealInitialCards() {
 
         state.getPlayer()
                 .addCard(
-                        state.getDeck().drawCard()
+                        deck.drawCard()
                 );
 
 
         state.getDealer()
                 .addCard(
-                        state.getDeck().drawCard()
+                        deck.drawCard()
                 );
 
 
         state.getPlayer()
                 .addCard(
-                        state.getDeck().drawCard()
+                        deck.drawCard()
                 );
 
 
         state.getDealer()
                 .addCard(
-                        state.getDeck().drawCard()
+                        deck.drawCard()
                 );
+
 
     }
 
 
     public void hit() {
 
+
+        if(state.getStatus()
+                != GameStatus.RUNNING) {
+
+            return;
+
+        }
+
+
         state.getPlayer()
                 .addCard(
-                        state.getDeck().drawCard()
+                        deck.drawCard()
                 );
 
 
-        if(state.getPlayer().isBusted()) {
+        if(state.getPlayer()
+                .isBusted()) {
 
-            finish();
+
+            state.setResult(
+                    GameResult.DEALER_WIN
+            );
+
+
+            state.setStatus(
+                    GameStatus.FINISHED
+            );
 
         }
 
     }
+
 
 
     public void stand() {
 
 
-        while(state.getDealer().getValue() < 17) {
+        while(
+                state.getDealer()
+                        .getValue()
+                        < 17
+        ) {
 
             state.getDealer()
                     .addCard(
-                            state.getDeck().drawCard()
+                            deck.drawCard()
                     );
 
         }
 
 
-        finish();
+        calculateResult();
 
     }
 
 
-    private void finish() {
 
-        state.setResult(
-                calculateResult()
-        );
+    private void calculateResult() {
+
+
+        int player =
+                state.getPlayer()
+                        .getValue();
+
+
+        int dealer =
+                state.getDealer()
+                        .getValue();
+
+
+        if(
+                dealer > 21 ||
+                        player > dealer
+        ) {
+
+
+            state.setResult(
+                    GameResult.PLAYER_WIN
+            );
+
+
+        }
+        else if(player == dealer) {
+
+
+            state.setResult(
+                    GameResult.DRAW
+            );
+
+
+        }
+        else {
+
+
+            state.setResult(
+                    GameResult.DEALER_WIN
+            );
+
+
+        }
 
 
         state.setStatus(
@@ -92,49 +152,6 @@ public class BlackjackGame {
 
     }
 
-
-    private GameResult calculateResult() {
-
-
-        int player =
-                state.getPlayer().getValue();
-
-
-        int dealer =
-                state.getDealer().getValue();
-
-
-        if(player > 21) {
-
-            return GameResult.DEALER_WIN;
-
-        }
-
-
-        if(dealer > 21) {
-
-            return GameResult.PLAYER_WIN;
-
-        }
-
-
-        if(player > dealer) {
-
-            return GameResult.PLAYER_WIN;
-
-        }
-
-
-        if(dealer > player) {
-
-            return GameResult.DEALER_WIN;
-
-        }
-
-
-        return GameResult.DRAW;
-
-    }
 
 
     public GameState getState() {

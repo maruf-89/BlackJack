@@ -1,8 +1,8 @@
 package blackjack.controller;
 
+import blackjack.dto.GameResponse;
 import blackjack.dto.StartGameRequest;
 import blackjack.dto.StartGameResponse;
-import blackjack.game.GameState;
 import blackjack.service.BlackjackService;
 
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +46,7 @@ public class BlackjackController {
 
 
     @PostMapping("/{gameId}/hit")
-    public GameState hit(
+    public GameResponse hit(
             @PathVariable String gameId
     ) {
 
@@ -56,7 +56,7 @@ public class BlackjackController {
 
 
     @PostMapping("/{gameId}/stand")
-    public GameState stand(
+    public GameResponse stand(
             @PathVariable String gameId
     ) {
 
@@ -66,7 +66,7 @@ public class BlackjackController {
 
 
     @GetMapping("/{gameId}")
-    public GameState getGame(
+    public GameResponse getGame(
             @PathVariable String gameId
     ) {
 

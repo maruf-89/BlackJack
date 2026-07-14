@@ -1,44 +1,24 @@
 package blackjack.game;
 
-
 public class GameState {
 
 
-    private final Deck deck;
+    private final Hand player =
+            new Hand();
 
-    private final Hand player;
 
-    private final Hand dealer;
+    private final Hand dealer =
+            new Hand();
 
 
     private double bet;
 
 
+    private GameStatus status =
+            GameStatus.RUNNING;
+
+
     private GameResult result;
-
-    private GameStatus status;
-
-
-    public GameState() {
-
-        this.deck = new Deck();
-
-        this.player = new Hand();
-
-        this.dealer = new Hand();
-
-        this.status = GameStatus.ACTIVE;
-
-        this.result = null;
-
-    }
-
-
-    public Deck getDeck() {
-
-        return deck;
-
-    }
 
 
     public Hand getPlayer() {
@@ -69,20 +49,6 @@ public class GameState {
     }
 
 
-    public GameResult getResult() {
-
-        return result;
-
-    }
-
-
-    public void setResult(GameResult result) {
-
-        this.result = result;
-
-    }
-
-
     public GameStatus getStatus() {
 
         return status;
@@ -93,6 +59,20 @@ public class GameState {
     public void setStatus(GameStatus status) {
 
         this.status = status;
+
+    }
+
+
+    public GameResult getResult() {
+
+        return result;
+
+    }
+
+
+    public void setResult(GameResult result) {
+
+        this.result = result;
 
     }
 

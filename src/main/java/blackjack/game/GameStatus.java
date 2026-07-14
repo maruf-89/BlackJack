@@ -1,10 +1,8 @@
 package blackjack.game;
 
-
 public enum GameStatus {
 
-    ACTIVE,
-
+    RUNNING,
     FINISHED
 
 }

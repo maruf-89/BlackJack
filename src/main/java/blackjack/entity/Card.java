@@ -15,7 +15,8 @@ public class Card {
     private String suit;
 
 
-    private String rank;
+    @Column(name = "card_rank")
+    private String cardRank;
 
 
     private int value;
@@ -47,16 +48,16 @@ public class Card {
     }
 
 
-    public String getRank() {
+    public String getCardRank() {
 
-        return rank;
+        return cardRank;
 
     }
 
 
-    public void setRank(String rank) {
+    public void setCardRank(String cardRank) {
 
-        this.rank = rank;
+        this.cardRank = cardRank;
 
     }
 

@@ -32,11 +32,20 @@ public class BlackjackController {
             @RequestBody StartGameRequest request
     ) {
 
-
         return blackjackService.startGame(
                 principal.getName(),
                 request.getBet()
         );
+
+    }
+
+
+    @PostMapping("/{gameId}/hit")
+    public GameState hit(
+            @PathVariable String gameId
+    ) {
+
+        return blackjackService.hit(gameId);
 
     }
 

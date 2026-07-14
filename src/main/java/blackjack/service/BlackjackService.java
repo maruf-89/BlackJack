@@ -58,7 +58,6 @@ public class BlackjackService {
             BigDecimal bet
     ) {
 
-
         User user = userRepository
                 .findByUsername(username)
                 .orElseThrow(
@@ -68,26 +67,33 @@ public class BlackjackService {
 
         GameState state = new GameState();
 
-
         state.setBet(
                 bet.doubleValue()
         );
 
 
         state.getPlayer()
-                .addCard(state.getDeck().drawCard());
+                .addCard(
+                        state.getDeck().drawCard()
+                );
 
 
         state.getDealer()
-                .addCard(state.getDeck().drawCard());
+                .addCard(
+                        state.getDeck().drawCard()
+                );
 
 
         state.getPlayer()
-                .addCard(state.getDeck().drawCard());
+                .addCard(
+                        state.getDeck().drawCard()
+                );
 
 
         state.getDealer()
-                .addCard(state.getDeck().drawCard());
+                .addCard(
+                        state.getDeck().drawCard()
+                );
 
 
         String gameId =
@@ -105,7 +111,34 @@ public class BlackjackService {
     }
 
 
-    public GameState getGame(String gameId) {
+    public GameState hit(
+            String gameId
+    ) {
+
+        GameState state = games.get(gameId);
+
+
+        if(state == null) {
+
+            throw new RuntimeException("Game not found");
+
+        }
+
+
+        state.getPlayer()
+                .addCard(
+                        state.getDeck().drawCard()
+                );
+
+
+        return state;
+
+    }
+
+
+    public GameState getGame(
+            String gameId
+    ) {
 
         return games.get(gameId);
 

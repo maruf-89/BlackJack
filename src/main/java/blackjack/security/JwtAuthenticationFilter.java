@@ -24,13 +24,9 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final CustomUserDetailsService userDetailsService;
+    private final String secret = "blackjack-secret-key-blackjack-secret-key-123456";
 
-    private final String secret =
-            "blackjack-secret-key-blackjack-secret-key-123456";
-
-    public JwtAuthenticationFilter(
-            CustomUserDetailsService userDetailsService
-    ) {
+    public JwtAuthenticationFilter(CustomUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
@@ -62,26 +58,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String username = claims.getSubject();
 
-        if (username != null &&
-                SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails user = userDetailsService.loadUserByUsername(username);
 
-            UserDetails user =
-                    userDetailsService.loadUserByUsername(username);
-
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(
-                            user,
-                            null,
-                            user.getAuthorities()
-                    );
-
-            authentication.setDetails(
-                    new WebAuthenticationDetailsSource()
-                            .buildDetails(request)
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                    user,
+                    null,
+                    user.getAuthorities()
             );
 
-            SecurityContextHolder.getContext()
-                    .setAuthentication(authentication);
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         filterChain.doFilter(request, response);

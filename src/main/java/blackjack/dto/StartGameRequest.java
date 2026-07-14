@@ -6,13 +6,11 @@ public class StartGameRequest {
 
     private BigDecimal bet;
 
-
     public BigDecimal getBet() {
 
         return bet;
 
     }
-
 
     public void setBet(BigDecimal bet) {
 

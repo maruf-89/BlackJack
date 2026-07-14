@@ -4,6 +4,7 @@ package blackjack.controller;
 import blackjack.dto.RegisterRequest;
 import blackjack.entity.User;
 import blackjack.service.UserService;
+import java.security.Principal;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,11 @@ public class UserController {
 
     }
 
+    @GetMapping("/me")
+    public User getCurrentUser(Principal principal) {
+        return userService.findByUsername(principal.getName());
+    }
+
     @PostMapping("/register")
     public User register(
             @RequestBody RegisterRequest request
@@ -38,3 +44,4 @@ public class UserController {
     }
 
 }
+

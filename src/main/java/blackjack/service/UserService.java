@@ -16,9 +16,7 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
-
     private final RoleRepository roleRepository;
-
     private final PasswordEncoder passwordEncoder;
 
     public UserService(
@@ -26,29 +24,20 @@ public class UserService {
             RoleRepository roleRepository,
             PasswordEncoder passwordEncoder
     ) {
-
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
-
     }
 
     public List<User> getAllUsers() {
-
         return userRepository.findAll();
-
     }
 
     public User register(RegisterRequest request) {
-
-        Role userRole = roleRepository
-                .findByName("USER")
-                .orElseThrow(
-                        () -> new RuntimeException("USER role missing")
-                );
+        Role userRole = roleRepository.findByName("USER")
+                .orElseThrow(() -> new RuntimeException("USER role missing"));
 
         User user = new User();
-
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -56,11 +45,14 @@ public class UserService {
         user.setBalance(new BigDecimal("1000.00"));
 
         return userRepository.save(user);
+    }
 
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found: " + username));
     }
 
     public User makeAdmin(Long userId) {
-
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -70,7 +62,6 @@ public class UserService {
         user.setRole(adminRole);
 
         return userRepository.save(user);
-
     }
-
 }
+

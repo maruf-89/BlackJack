@@ -1,56 +1,27 @@
 package blackjack.game;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class Hand {
 
+    private final List<Card> cards = new ArrayList<>();
 
-
-    private final List<Card> cards =
-            new ArrayList<>();
-
-
-
-
-    public void addCard(Card card){
-
+    public void addCard(Card card) {
         cards.add(card);
-
     }
 
-
-
-
-    public List<Card> getCards(){
-
+    public List<Card> getCards() {
         return cards;
-
     }
 
-
-
-
-
-    public int getValue(){
-
+    public int getValue() {
         return cards.stream()
                 .mapToInt(Card::getValue)
                 .sum();
-
     }
 
-
-
-
-
-    public boolean isBusted(){
-
-        return getValue()>21;
-
+    public boolean isBusted() {
+        return getValue() > 21;
     }
-
-
 }

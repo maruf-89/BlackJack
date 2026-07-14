@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Highscore — Table Royale</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<div class="game">
+
+    <nav id="mainNav" class="main-nav"></nav>
+
+    <h1>♠ Highscore ♠</h1>
+    <p class="subtitle">De rikaste spelarna vid bordet</p>
+
+    <div class="panel">
+
+        <div id="highscore-loading" class="state-message">
+            <p>Laddar topplistan…</p>
+        </div>
+
+        <div id="highscore-empty" class="state-message">
+            <p>Ingen har spelat än — bli den första på listan.</p>
+        </div>
+
+        <div id="highscore-error" class="state-message">
+            <p>Kunde inte hämta topplistan just nu.</p>
+        </div>
+
+        <div id="highscore-list" class="highscore-list">
+            <div id="highscoreList"></div>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="/js/auth.js"></script>
+<script src="/js/highscore.js"></script>
+
+</body>
+</html>

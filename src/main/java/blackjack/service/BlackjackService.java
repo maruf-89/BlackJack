@@ -44,7 +44,8 @@ public class BlackjackService {
 
     @Transactional
     public String startGame(String username, BigDecimal bet) {
-        User user = userRepository.findByUsername(username).orElseThrow();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found: " + username));
 
         if (user.getBalance().compareTo(bet) < 0) {
             throw new RuntimeException("Insufficient balance");
@@ -115,8 +116,6 @@ public class BlackjackService {
         game.restore(cards);
 
         GameState state = game.getState();
-
-        // Återställ data från Game-tabellen
         state.setBet(databaseGame.getBetAmount().doubleValue());
 
         if (databaseGame.getStatus().equals("FINISHED")) {
@@ -139,29 +138,24 @@ public class BlackjackService {
     }
 
     private GameRound getRound(String gameId) {
+        Game game = gameRepository.findByGameId(gameId).orElseThrow();
 
-        Game game = gameRepository
-                .findByGameId(gameId)
-                .orElseThrow();
-
-        return gameRoundRepository
-                .findTopByGameOrderByRoundNumberDesc(game)
-                .orElseThrow(() ->
-                        new RuntimeException("Round not found"));
+        return gameRoundRepository.findTopByGameOrderByRoundNumberDesc(game)
+                .orElseThrow(() -> new RuntimeException("Round not found"));
     }
 
     private void saveCards(GameRound round, BlackjackGame game) {
         List<Card> cards = new ArrayList<>();
 
         game.getState().getPlayer().getCards().forEach(c -> {
-            Card card = convert(c);
+            Card card = CardMapper.convert(c);
             card.setGameRound(round);
             card.setOwner("PLAYER");
             cards.add(card);
         });
 
         game.getState().getDealer().getCards().forEach(c -> {
-            Card card = convert(c);
+            Card card = CardMapper.convert(c);
             card.setGameRound(round);
             card.setOwner("DEALER");
             cards.add(card);
@@ -177,14 +171,14 @@ public class BlackjackService {
         List<Card> allCards = new ArrayList<>();
 
         game.getState().getPlayer().getCards().forEach(c -> {
-            Card card = convert(c);
+            Card card = CardMapper.convert(c);
             card.setGameRound(round);
             card.setOwner("PLAYER");
             allCards.add(card);
         });
 
         game.getState().getDealer().getCards().forEach(c -> {
-            Card card = convert(c);
+            Card card = CardMapper.convert(c);
             card.setGameRound(round);
             card.setOwner("DEALER");
             allCards.add(card);
@@ -196,14 +190,6 @@ public class BlackjackService {
 
         List<Card> newCards = allCards.subList(existingCount, allCards.size());
         cardRepository.saveAll(newCards);
-    }
-
-    private Card convert(blackjack.game.Card gameCard) {
-        Card card = new Card();
-        card.setSuit(gameCard.getSuit());
-        card.setCardRank(gameCard.getRank());
-        card.setValue(gameCard.getValue());
-        return card;
     }
 
     private void saveIfFinished(String gameId, GameState state) {

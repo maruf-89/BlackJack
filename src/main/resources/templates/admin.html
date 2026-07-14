@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin — Table Royale</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<div class="game wide">
+
+    <nav id="mainNav" class="main-nav"></nav>
+
+    <h1>♠ Admin ♠</h1>
+    <p class="subtitle">Hantera användare</p>
+
+    <div class="panel">
+
+        <div id="admin-loggedOut" class="state-message">
+            <p>Du måste logga in för att se den här sidan.</p>
+            <a class="primary-link" href="/">Gå till inloggning</a>
+        </div>
+
+        <div id="admin-loading" class="state-message">
+            <p>Laddar användare…</p>
+        </div>
+
+        <div id="admin-denied" class="state-message">
+            <p>Du har inte administratörsbehörighet.</p>
+        </div>
+
+        <div id="admin-error" class="state-message">
+            <p>Något gick fel när användarna skulle hämtas.</p>
+        </div>
+
+        <div id="admin-table" class="table-wrap">
+            <table class="admin-table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Användarnamn</th>
+                    <th>E-post</th>
+                    <th>Saldo</th>
+                    <th>Roll</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody id="userTableBody"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="/js/auth.js"></script>
+<script src="/js/admin.js"></script>
+
+</body>
+</html>

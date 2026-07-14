@@ -43,7 +43,10 @@ public class User {
     private Role role;
 
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(
+            mappedBy="user",
+            cascade = CascadeType.ALL
+    )
     private List<Game> games;
 
 

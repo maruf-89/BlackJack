@@ -1,9 +1,16 @@
 package blackjack.entity;
 
+
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+
 
 @Entity
-@Table(name = "cards")
+@Table(name="cards")
+@Getter
+@Setter
 public class Card {
 
 
@@ -12,81 +19,24 @@ public class Card {
     private Long id;
 
 
+
     private String suit;
 
 
-    @Column(name = "card_rank")
-    private String cardRank;
+
+    @Column(name="card_rank")
+    private String rank;
+
 
 
     private int value;
 
 
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "game_round_id")
+    @JoinColumn(name="game_round_id")
     private GameRound gameRound;
 
 
-    public Long getId() {
-
-        return id;
-
-    }
-
-
-    public String getSuit() {
-
-        return suit;
-
-    }
-
-
-    public void setSuit(String suit) {
-
-        this.suit = suit;
-
-    }
-
-
-    public String getCardRank() {
-
-        return cardRank;
-
-    }
-
-
-    public void setCardRank(String cardRank) {
-
-        this.cardRank = cardRank;
-
-    }
-
-
-    public int getValue() {
-
-        return value;
-
-    }
-
-
-    public void setValue(int value) {
-
-        this.value = value;
-
-    }
-
-
-    public GameRound getGameRound() {
-
-        return gameRound;
-
-    }
-
-
-    public void setGameRound(GameRound gameRound) {
-
-        this.gameRound = gameRound;
-
-    }
 
 }

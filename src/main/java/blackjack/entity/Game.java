@@ -6,13 +6,16 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+
 
 @Entity
 @Table(name = "games")
 @Getter
 @Setter
 public class Game {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +37,7 @@ public class Game {
     private int dealerScore;
 
 
+    @Column(nullable = false)
     private BigDecimal betAmount;
 
 
@@ -43,12 +47,22 @@ public class Game {
     private LocalDateTime createdAt;
 
 
-    @OneToMany(mappedBy = "game")
-    private List<GameRound> rounds;
+
+    @OneToMany(
+            mappedBy = "game",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<GameRound> rounds =
+            new ArrayList<>();
+
 
 
     @PrePersist
-    private void createdAt() {
+    private void createdAt(){
+
         createdAt = LocalDateTime.now();
+
     }
+
 }

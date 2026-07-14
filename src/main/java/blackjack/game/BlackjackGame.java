@@ -12,6 +12,7 @@ public class BlackjackGame {
             new GameState();
 
 
+
     public BlackjackGame() {
 
 
@@ -38,8 +39,8 @@ public class BlackjackGame {
                         deck.drawCard()
                 );
 
-
     }
+
 
 
     public void hit() {
@@ -81,11 +82,18 @@ public class BlackjackGame {
     public void stand() {
 
 
+        if(state.getStatus()
+                != GameStatus.RUNNING) {
+
+            return;
+
+        }
+
+
         while(
                 state.getDealer()
-                        .getValue()
-                        < 17
-        ) {
+                        .getValue() < 17
+        ){
 
             state.getDealer()
                     .addCard(
@@ -114,6 +122,7 @@ public class BlackjackGame {
                         .getValue();
 
 
+
         if(
                 dealer > 21 ||
                         player > dealer
@@ -126,7 +135,9 @@ public class BlackjackGame {
 
 
         }
-        else if(player == dealer) {
+        else if(
+                player == dealer
+        ) {
 
 
             state.setResult(
@@ -142,8 +153,8 @@ public class BlackjackGame {
                     GameResult.DEALER_WIN
             );
 
-
         }
+
 
 
         state.setStatus(

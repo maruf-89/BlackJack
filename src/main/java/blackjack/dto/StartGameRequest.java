@@ -1,12 +1,23 @@
 package blackjack.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.math.BigDecimal;
 
-@Getter
-@Setter
 public class StartGameRequest {
 
-    private double bet;
+    private BigDecimal bet;
+
+
+    public BigDecimal getBet() {
+
+        return bet;
+
+    }
+
+
+    public void setBet(BigDecimal bet) {
+
+        this.bet = bet;
+
+    }
 
 }

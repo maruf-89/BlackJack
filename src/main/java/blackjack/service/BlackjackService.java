@@ -1,110 +1,113 @@
 package blackjack.service;
 
-import blackjack.game.GameResult;
+import blackjack.entity.Game;
+import blackjack.entity.User;
 import blackjack.game.GameState;
+import blackjack.repository.GameRepository;
+import blackjack.repository.UserRepository;
 
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+
 @Service
 public class BlackjackService {
+
+
+    private final GameRepository gameRepository;
+
+    private final UserRepository userRepository;
+
 
     private final Map<String, GameState> games =
             new ConcurrentHashMap<>();
 
-    public String startGame(double bet) {
 
-        GameState game = new GameState();
-        game.setBet(bet);
+    public BlackjackService(
+            GameRepository gameRepository,
+            UserRepository userRepository
+    ) {
 
-        game.getPlayer().addCard(game.getDeck().drawCard());
-        game.getDealer().addCard(game.getDeck().drawCard());
+        this.gameRepository = gameRepository;
+        this.userRepository = userRepository;
 
-        game.getPlayer().addCard(game.getDeck().drawCard());
-        game.getDealer().addCard(game.getDeck().drawCard());
+    }
 
-        String gameId = UUID.randomUUID().toString();
 
-        games.put(gameId, game);
+    public List<Game> getAllGames() {
+
+        return gameRepository.findAll();
+
+    }
+
+
+    public Game saveGame(Game game) {
+
+        return gameRepository.save(game);
+
+    }
+
+
+    public String startGame(
+            String username,
+            BigDecimal bet
+    ) {
+
+
+        User user = userRepository
+                .findByUsername(username)
+                .orElseThrow(
+                        () -> new RuntimeException("User not found")
+                );
+
+
+        GameState state = new GameState();
+
+
+        state.setBet(
+                bet.doubleValue()
+        );
+
+
+        state.getPlayer()
+                .addCard(state.getDeck().drawCard());
+
+
+        state.getDealer()
+                .addCard(state.getDeck().drawCard());
+
+
+        state.getPlayer()
+                .addCard(state.getDeck().drawCard());
+
+
+        state.getDealer()
+                .addCard(state.getDeck().drawCard());
+
+
+        String gameId =
+                UUID.randomUUID().toString();
+
+
+        games.put(
+                gameId,
+                state
+        );
+
 
         return gameId;
 
     }
 
+
     public GameState getGame(String gameId) {
 
         return games.get(gameId);
-
-    }
-
-    public GameState hit(String gameId) {
-
-        GameState game = games.get(gameId);
-
-        if (game == null) {
-            throw new RuntimeException("Game not found");
-        }
-
-        game.getPlayer().addCard(
-                game.getDeck().drawCard()
-        );
-
-        return game;
-
-    }
-
-    public GameResult stand(String gameId) {
-
-        GameState game = games.get(gameId);
-
-        if (game == null) {
-            throw new RuntimeException("Game not found");
-        }
-
-        while (game.getDealer().getValue() < 17) {
-
-            game.getDealer().addCard(
-                    game.getDeck().drawCard()
-            );
-
-        }
-
-        int playerValue = game.getPlayer().getValue();
-        int dealerValue = game.getDealer().getValue();
-
-        String result;
-
-        if (playerValue > 21) {
-
-            result = "PLAYER_BUST";
-
-        } else if (dealerValue > 21) {
-
-            result = "PLAYER_WIN";
-
-        } else if (playerValue > dealerValue) {
-
-            result = "PLAYER_WIN";
-
-        } else if (dealerValue > playerValue) {
-
-            result = "DEALER_WIN";
-
-        } else {
-
-            result = "PUSH";
-
-        }
-
-        games.remove(gameId);
-
-        return new GameResult(
-                game,
-                result
-        );
 
     }
 

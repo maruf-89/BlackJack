@@ -1,42 +1,32 @@
 package blackjack.game;
 
-
 import blackjack.entity.Card;
 
 import java.util.List;
 
-
-
 public class BlackjackGame {
-
 
 
     private final Deck deck =
             new Deck();
 
 
-
     private final GameState state =
             new GameState();
 
 
-
-
-
-    public BlackjackGame(){
+    public BlackjackGame() {
 
         startNewGame();
 
     }
 
 
+    public BlackjackGame(
+            boolean newGame
+    ) {
 
-
-
-    public BlackjackGame(boolean newGame){
-
-
-        if(newGame){
+        if (newGame) {
 
             startNewGame();
 
@@ -45,80 +35,48 @@ public class BlackjackGame {
     }
 
 
-
-
-
-
-
-    private void startNewGame(){
-
+    private void startNewGame() {
 
         state.getPlayer()
                 .addCard(
                         deck.drawCard()
                 );
 
-
-
         state.getDealer()
                 .addCard(
                         deck.drawCard()
                 );
-
-
 
         state.getPlayer()
                 .addCard(
                         deck.drawCard()
                 );
 
-
-
         state.getDealer()
                 .addCard(
                         deck.drawCard()
                 );
-
 
     }
 
 
-
-
-
-
-
-
-
+    /**
+     * Återskapar ett spel från databasen.
+     */
     public void restore(
             List<Card> cards
-    ){
-
+    ) {
 
         state.getPlayer()
                 .getCards()
                 .clear();
-
-
 
         state.getDealer()
                 .getCards()
                 .clear();
 
 
-
-
-        boolean playerTurn =
-                true;
-
-
-
-        int playerCards = 0;
-
-
-
-        for(Card card : cards){
-
+        for (Card card : cards) {
 
             blackjack.game.Card gameCard =
                     new blackjack.game.Card(
@@ -128,62 +86,34 @@ public class BlackjackGame {
                     );
 
 
-
-            /*
-             * Vi sparar spelaren först
-             * och dealern efter.
-             *
-             * Detta matchar saveCards()
-             */
-
-
-            if(playerCards < cards.size()/2){
-
+            if ("PLAYER".equals(card.getOwner())) {
 
                 state.getPlayer()
                         .addCard(gameCard);
 
-
-                playerCards++;
-
-
             }
-            else {
-
+            else if ("DEALER".equals(card.getOwner())) {
 
                 state.getDealer()
                         .addCard(gameCard);
 
-
             }
 
-
         }
-
 
     }
 
 
+    public void hit() {
 
-
-
-
-
-
-
-    public void hit(){
-
-
-        if(
+        if (
                 state.getStatus()
                         != GameStatus.RUNNING
-        ){
+        ) {
 
             return;
 
         }
-
-
 
 
         state.getPlayer()
@@ -192,166 +122,104 @@ public class BlackjackGame {
                 );
 
 
-
-
-
-        if(
+        if (
                 state.getPlayer()
                         .isBusted()
-        ){
-
+        ) {
 
             state.setResult(
                     GameResult.DEALER_WIN
             );
 
-
-
             state.setStatus(
                     GameStatus.FINISHED
             );
 
-
         }
-
 
     }
 
 
+    public void stand() {
 
-
-
-
-
-
-
-    public void stand(){
-
-
-
-        if(
+        if (
                 state.getStatus()
                         != GameStatus.RUNNING
-        ){
+        ) {
 
             return;
 
         }
 
 
-
-
-
-        while(
+        while (
                 state.getDealer()
-                        .getValue()
-                        <17
-        ){
-
+                        .getValue() < 17
+        ) {
 
             state.getDealer()
                     .addCard(
                             deck.drawCard()
                     );
 
-
         }
-
-
 
 
         calculateResult();
 
-
     }
 
 
-
-
-
-
-
-
-
-    private void calculateResult(){
-
-
+    private void calculateResult() {
 
         int player =
                 state.getPlayer()
                         .getValue();
-
-
 
         int dealer =
                 state.getDealer()
                         .getValue();
 
 
-
-
-
-        if(
-                dealer >21 ||
+        if (
+                dealer > 21 ||
                         player > dealer
-        ){
-
+        ) {
 
             state.setResult(
                     GameResult.PLAYER_WIN
             );
 
-
         }
-
-
-
-        else if(
+        else if (
                 player == dealer
-        ){
-
+        ) {
 
             state.setResult(
                     GameResult.DRAW
             );
 
-
         }
-
-
-
         else {
-
 
             state.setResult(
                     GameResult.DEALER_WIN
             );
 
-
         }
-
-
 
 
         state.setStatus(
                 GameStatus.FINISHED
         );
 
-
     }
 
 
-
-
-
-
-
-
-    public GameState getState(){
+    public GameState getState() {
 
         return state;
 
     }
-
 
 }

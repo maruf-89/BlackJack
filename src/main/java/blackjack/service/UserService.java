@@ -3,8 +3,10 @@ package blackjack.service;
 import blackjack.dto.HighscoreEntry;
 import blackjack.dto.RegisterRequest;
 import blackjack.entity.Role;
+import blackjack.entity.Transaction;
 import blackjack.entity.User;
 import blackjack.repository.RoleRepository;
+import blackjack.repository.TransactionRepository;
 import blackjack.repository.UserRepository;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,15 +20,18 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final TransactionRepository transactionRepository;
     private final PasswordEncoder passwordEncoder;
 
     public UserService(
             UserRepository userRepository,
             RoleRepository roleRepository,
+            TransactionRepository transactionRepository,
             PasswordEncoder passwordEncoder
     ) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.transactionRepository = transactionRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -70,5 +75,27 @@ public class UserService {
         user.setRole(adminRole);
 
         return userRepository.save(user);
+    }
+
+    public User updateBalance(Long userId, BigDecimal newBalance) {
+        if (newBalance == null || newBalance.compareTo(BigDecimal.ZERO) < 0) {
+            throw new RuntimeException("Balance cannot be negative");
+        }
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        BigDecimal delta = newBalance.subtract(user.getBalance());
+
+        user.setBalance(newBalance);
+        userRepository.save(user);
+
+        Transaction transaction = new Transaction();
+        transaction.setUser(user);
+        transaction.setAmount(delta);
+        transaction.setType("ADMIN_ADJUSTMENT");
+        transactionRepository.save(transaction);
+
+        return user;
     }
 }

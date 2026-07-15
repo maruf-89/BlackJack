@@ -65,6 +65,21 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public void changePassword(String username, String currentPassword, String newPassword) {
+        if (newPassword == null || newPassword.length() < 4) {
+            throw new RuntimeException("New password must be at least 4 characters");
+        }
+
+        User user = findByUsername(username);
+
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new RuntimeException("Current password is incorrect");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
     public User makeAdmin(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));

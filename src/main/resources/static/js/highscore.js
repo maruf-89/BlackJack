@@ -24,7 +24,12 @@ function loadHighscores() {
 function showHighscoreState(state) {
     ["loading", "empty", "error", "list"].forEach(s => {
         const el = document.getElementById(`highscore-${s}`);
-        if (el) el.style.display = s === state ? "block" : "none";
+        if (!el) return;
+        if (s !== state) {
+            el.style.display = "none";
+        } else {
+            el.style.display = s === "list" ? "flex" : "block";
+        }
     });
 }
 
@@ -39,7 +44,7 @@ function renderHighscoreList(entries) {
         </div>
     `).join("");
 
-    document.getElementById("highscoreList").innerHTML = rows;
+    document.getElementById("highscore-list").innerHTML = rows;
 }
 
 function escapeHtml(s) {

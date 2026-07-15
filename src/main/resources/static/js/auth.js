@@ -43,6 +43,7 @@ function renderNav(activePage) {
     nav.innerHTML = `
         <a href="/" class="nav-link ${activePage === "game" ? "active" : ""}">Spel</a>
         <a href="/highscore.html" class="nav-link ${activePage === "highscore" ? "active" : ""}">Highscore</a>
+        ${loggedIn ? `<a href="/profile.html" class="nav-link ${activePage === "profile" ? "active" : ""}">Profil</a>` : ""}
         ${loggedIn ? `<a href="/admin.html" class="nav-link ${activePage === "admin" ? "active" : ""}">Admin</a>` : ""}
         <span class="nav-spacer"></span>
         ${loggedIn

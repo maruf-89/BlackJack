@@ -5,6 +5,7 @@ import blackjack.dto.RegisterRequest;
 import blackjack.entity.User;
 import blackjack.service.UserService;
 import java.security.Principal;
+import blackjack.dto.ChangePasswordRequest;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +30,17 @@ public class UserController {
 
     }
 
+    @PutMapping("/password")
+    public void changePassword(
+            Principal principal,
+            @RequestBody ChangePasswordRequest request
+    ) {
+        userService.changePassword(
+                principal.getName(),
+                request.getCurrentPassword(),
+                request.getNewPassword()
+        );
+    }
 
     @GetMapping("/me")
     public User getCurrentUser(Principal principal) {

@@ -69,6 +69,7 @@ h1 {
     font-weight: 600;
 }
 
+
 .setup {
     background: rgba(6, 47, 29, 0.55);
     border: 1px solid rgba(201,162,39,0.35);
@@ -149,6 +150,7 @@ input:focus {
 .chip[data-val="25"] { background: #1f5c8a; }
 .chip[data-val="50"] { background: #1f7a4c; }
 .chip[data-val="100"] { background: var(--ink); border-color: var(--brass-light); }
+
 
 .auth-panel {
     background: rgba(6, 47, 29, 0.55);
@@ -237,6 +239,7 @@ button.ghost {
     box-shadow: none;
 }
 
+
 .table {
     background:
             radial-gradient(ellipse 90% 140% at 50% 0%, var(--felt-light) 0%, var(--felt) 60%, var(--felt-dark) 100%);
@@ -298,6 +301,7 @@ button.ghost {
     background: linear-gradient(90deg, transparent, rgba(201,162,39,0.5), transparent);
     margin: 22px 0;
 }
+
 
 .card {
     background: var(--cream);
@@ -361,6 +365,7 @@ button.ghost {
 .card:nth-child(4) { animation-delay: 0.24s; }
 .card:nth-child(5) { animation-delay: 0.32s; }
 .card:nth-child(6) { animation-delay: 0.4s; }
+
 
 .buttons {
     display: flex;
@@ -457,6 +462,7 @@ button:disabled {
     text-transform: uppercase;
 }
 
+
 .empty-hint {
     text-align: center;
     color: rgba(248,243,230,0.4);
@@ -464,6 +470,7 @@ button:disabled {
     font-style: italic;
     padding: 30px 0;
 }
+
 
 @media (max-width: 600px) {
     h1 { font-size: 30px; letter-spacing: 2px; }
@@ -475,10 +482,13 @@ button:disabled {
     button { padding: 13px 26px; font-size: 15px; }
 }
 
+
 @media (prefers-reduced-motion: reduce) {
     .card { animation: none; }
     button, .chip { transition: none; }
 }
+
+
 
 .main-nav {
     display: flex;
@@ -644,7 +654,6 @@ button.ghost.small {
     color: var(--brass-light);
 }
 
-
 .balance-edit {
     display: flex;
     align-items: center;
@@ -655,4 +664,56 @@ button.ghost.small {
     width: 110px;
     padding: 8px 10px;
     font-size: 14px;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 4px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.info-label {
+    color: rgba(248,243,230,0.6);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+}
+
+.info-value {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--brass-light);
+}
+
+.section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--brass-light);
+    margin: 24px 0 16px;
+}
+
+.panel .field {
+    max-width: 340px;
+    margin-bottom: 14px;
+}
+
+.panel input {
+    width: 100%;
+}
+
+.auth-success {
+    color: var(--win);
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0 0 10px;
+    display: none;
 }

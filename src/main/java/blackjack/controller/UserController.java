@@ -29,6 +29,7 @@ public class UserController {
 
     }
 
+
     @GetMapping("/me")
     public User getCurrentUser(Principal principal) {
         return userService.findByUsername(principal.getName());

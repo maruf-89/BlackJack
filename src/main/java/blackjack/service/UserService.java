@@ -1,5 +1,6 @@
 package blackjack.service;
 
+import blackjack.dto.HighscoreEntry;
 import blackjack.dto.RegisterRequest;
 import blackjack.entity.Role;
 import blackjack.entity.User;
@@ -33,6 +34,18 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public List<HighscoreEntry> getHighscores() {
+        return userRepository.findTop10ByOrderByBalanceDesc()
+                .stream()
+                .map(u -> new HighscoreEntry(u.getUsername(), u.getBalance()))
+                .toList();
+    }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+    }
+
     public User register(RegisterRequest request) {
         Role userRole = roleRepository.findByName("USER")
                 .orElseThrow(() -> new RuntimeException("USER role missing"));
@@ -47,11 +60,6 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found: " + username));
-    }
-
     public User makeAdmin(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -64,4 +72,3 @@ public class UserService {
         return userRepository.save(user);
     }
 }
-

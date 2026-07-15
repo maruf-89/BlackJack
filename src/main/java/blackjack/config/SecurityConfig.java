@@ -62,6 +62,8 @@ public class SecurityConfig {
 
                         .requestMatchers(
                                 "/",
+                                "/admin.html",
+                                "/highscore.html",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**"
@@ -72,6 +74,9 @@ public class SecurityConfig {
                                 "/api/users/register",
                                 "/api/users/login"
                         )
+                        .permitAll()
+
+                        .requestMatchers("/api/highscores")
                         .permitAll()
 
                         .requestMatchers(

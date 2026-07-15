@@ -1,5 +1,3 @@
-let authToken = null;
-let currentUsername = null;
 let gameId = null;
 let selectedBet = 10;
 
@@ -99,8 +97,7 @@ function login(username, password) {
             return r.text();
         })
         .then(token => {
-            authToken = token;
-            currentUsername = username;
+            saveSession(token, username);
             onAuthenticated();
         })
         .catch(err => {
@@ -113,8 +110,7 @@ function login(username, password) {
 }
 
 function logout() {
-    authToken = null;
-    currentUsername = null;
+    clearSession();
     gameId = null;
     document.getElementById("authPanel").style.display = "flex";
     document.getElementById("userBar").style.display = "none";
@@ -123,24 +119,25 @@ function logout() {
     document.getElementById("authPassword").value = "";
     document.getElementById("balanceText").innerText = "";
     resetTable();
+    renderNav("game");
 }
 
 function onAuthenticated() {
     document.getElementById("authPanel").style.display = "none";
     document.getElementById("userBar").style.display = "flex";
-    document.getElementById("welcomeText").innerText = `Inloggad som ${currentUsername}`;
+    document.getElementById("welcomeText").innerText = `Inloggad som ${getUsername()}`;
     document.querySelector(".setup").style.display = "flex";
     refreshBalance();
+    renderNav("game");
 }
 
 function refreshBalance() {
-    authFetch("/api/users")
+    authFetch("/api/users/me")
         .then(r => {
             if (!r.ok) throw new Error(`Server svarade ${r.status}`);
             return r.json();
         })
-        .then(users => {
-            const me = users.find(u => u.username === currentUsername);
+        .then(me => {
             const balanceEl = document.getElementById("balanceText");
             if (me && me.balance !== undefined) {
                 balanceEl.innerText = `Saldo: ${formatCurrency(me.balance)}`;
@@ -151,17 +148,6 @@ function refreshBalance() {
         .catch(err => {
             console.error("refreshBalance() misslyckades:", err);
         });
-}
-
-function formatCurrency(amount) {
-    return `${Number(amount).toLocaleString("sv-SE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} kr`;
-}
-
-function authFetch(url, options = {}) {
-    const headers = Object.assign({}, options.headers, {
-        Authorization: `Bearer ${authToken}`
-    });
-    return fetch(url, Object.assign({}, options, { headers }));
 }
 
 const SUIT_MAP = {
@@ -248,7 +234,6 @@ function startGame() {
         })
         .then(data => {
             gameId = data.gameId;
-            console.log("Spel startat, gameId:", gameId);
             document.querySelector(".setup").style.display = "none";
             refreshBalance();
             loadGame();
@@ -382,4 +367,9 @@ document.addEventListener("DOMContentLoaded", () => {
     initChips();
     initAuthTabs();
     setActionButtons(false);
+    renderNav("game");
+
+    if (isLoggedIn()) {
+        onAuthenticated();
+    }
 });

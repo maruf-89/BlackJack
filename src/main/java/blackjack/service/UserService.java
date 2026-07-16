@@ -109,6 +109,18 @@ public class UserService {
         return user;
     }
 
+    public User setEnabled(String actingAdminUsername, Long userId, boolean enabled) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!enabled && user.getUsername().equals(actingAdminUsername)) {
+            throw new RuntimeException("You cannot ban your own account");
+        }
+
+        user.setEnabled(enabled);
+        return userRepository.save(user);
+    }
+
     public void changePassword(String username, String currentPassword, String newPassword) {
         if (newPassword == null || newPassword.length() < 4) {
             throw new RuntimeException("New password must be at least 4 characters");

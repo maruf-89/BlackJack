@@ -1,12 +1,14 @@
 package blackjack.controller;
 
 import blackjack.dto.BalanceUpdateRequest;
+import blackjack.dto.UserStatusRequest;
 import blackjack.entity.User;
 import blackjack.service.UserService;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -36,5 +38,14 @@ public class AdminController {
             @RequestBody BalanceUpdateRequest request
     ) {
         return userService.updateBalance(id, request.getBalance());
+    }
+
+    @PutMapping("/users/{id}/status")
+    public User setUserStatus(
+            Principal principal,
+            @PathVariable Long id,
+            @RequestBody UserStatusRequest request
+    ) {
+        return userService.setEnabled(principal.getName(), id, request.isEnabled());
     }
 }

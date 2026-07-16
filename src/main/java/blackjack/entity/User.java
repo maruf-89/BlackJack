@@ -32,6 +32,9 @@ public class User {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal balance = new BigDecimal("1000.00");
 
+    @Column(nullable = false)
+    private boolean enabled = true;
+
     private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.EAGER)

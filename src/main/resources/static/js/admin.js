@@ -49,11 +49,15 @@ function renderUserTable(users) {
                 </div>
             </td>
             <td><span class="role-badge ${u.role && u.role.name === "ADMIN" ? "admin" : ""}">${u.role ? u.role.name : "—"}</span></td>
-            <td>
+            <td><span class="status-badge ${u.enabled ? "active" : "banned"}">${u.enabled ? "Aktiv" : "Bannad"}</span></td>
+            <td class="actions-cell">
                 ${u.role && u.role.name === "ADMIN"
         ? '<span class="already-admin">Admin</span>'
         : `<button class="ghost small" onclick="promoteUser(${u.id})">Gör till admin</button>`
     }
+                <button class="ghost small ${u.enabled ? "danger" : ""}" onclick="toggleStatus(${u.id}, ${!u.enabled})">
+                    ${u.enabled ? "Banna" : "Aktivera"}
+                </button>
             </td>
         </tr>
     `).join("");
@@ -96,6 +100,31 @@ function updateBalance(id) {
         .catch(err => {
             console.error("updateBalance() misslyckades:", err);
             alert("Kunde inte uppdatera saldot.");
+        });
+}
+
+function toggleStatus(id, enabled) {
+    const confirmMessage = enabled
+        ? "Aktivera det här kontot igen?"
+        : "Banna det här kontot? Användaren loggas ut direkt och kan inte logga in igen förrän du aktiverar kontot.";
+
+    if (!confirm(confirmMessage)) {
+        return;
+    }
+
+    authFetch(`/api/admin/users/${id}/status`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ enabled })
+    })
+        .then(r => {
+            if (!r.ok) throw new Error(r.status === 400 ? "Du kan inte banna ditt eget konto." : `Server svarade ${r.status}`);
+            return r.json();
+        })
+        .then(() => loadAdminPage())
+        .catch(err => {
+            console.error("toggleStatus() misslyckades:", err);
+            alert(err.message);
         });
 }
 

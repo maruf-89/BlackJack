@@ -13,7 +13,6 @@ public class StartGameResponse {
 
     }
 
-
     public String getGameId() {
 
         return gameId;

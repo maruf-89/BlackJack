@@ -29,7 +29,6 @@ body {
     min-height: 100vh;
     padding: 40px 20px 60px;
 }
-
 body::before {
     content: "";
     position: fixed;
@@ -68,7 +67,6 @@ h1 {
     margin-bottom: 28px;
     font-weight: 600;
 }
-
 
 .setup {
     background: rgba(6, 47, 29, 0.55);
@@ -115,7 +113,6 @@ input:focus {
     outline: 2px solid var(--brass);
     outline-offset: 1px;
 }
-
 .chip-row {
     display: flex;
     gap: 10px;
@@ -150,7 +147,6 @@ input:focus {
 .chip[data-val="25"] { background: #1f5c8a; }
 .chip[data-val="50"] { background: #1f7a4c; }
 .chip[data-val="100"] { background: var(--ink); border-color: var(--brass-light); }
-
 
 .auth-panel {
     background: rgba(6, 47, 29, 0.55);
@@ -239,7 +235,6 @@ button.ghost {
     box-shadow: none;
 }
 
-
 .table {
     background:
             radial-gradient(ellipse 90% 140% at 50% 0%, var(--felt-light) 0%, var(--felt) 60%, var(--felt-dark) 100%);
@@ -301,7 +296,6 @@ button.ghost {
     background: linear-gradient(90deg, transparent, rgba(201,162,39,0.5), transparent);
     margin: 22px 0;
 }
-
 
 .card {
     background: var(--cream);
@@ -462,7 +456,6 @@ button:disabled {
     text-transform: uppercase;
 }
 
-
 .empty-hint {
     text-align: center;
     color: rgba(248,243,230,0.4);
@@ -482,12 +475,10 @@ button:disabled {
     button { padding: 13px 26px; font-size: 15px; }
 }
 
-
 @media (prefers-reduced-motion: reduce) {
     .card { animation: none; }
     button, .chip { transition: none; }
 }
-
 
 
 .main-nav {
@@ -539,6 +530,7 @@ button.ghost.small {
     font-size: 12px;
 }
 
+
 .game.wide {
     max-width: 960px;
 }
@@ -567,6 +559,7 @@ button.ghost.small {
     padding: 12px 28px;
     border-radius: 30px;
 }
+
 
 .table-wrap {
     display: none;
@@ -613,6 +606,7 @@ button.ghost.small {
     font-style: italic;
 }
 
+
 .highscore-list {
     display: none;
     flex-direction: column;
@@ -654,6 +648,7 @@ button.ghost.small {
     color: var(--brass-light);
 }
 
+
 .balance-edit {
     display: flex;
     align-items: center;
@@ -665,6 +660,7 @@ button.ghost.small {
     padding: 8px 10px;
     font-size: 14px;
 }
+
 
 .profile-info {
     display: flex;
@@ -716,4 +712,42 @@ button.ghost.small {
     font-weight: 700;
     margin: 0 0 10px;
     display: none;
+}
+
+.type-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    background: rgba(255,255,255,0.08);
+}
+
+.type-badge.tx-bet {
+    background: rgba(193,68,58,0.18);
+    color: var(--lose);
+}
+
+.type-badge.tx-win {
+    background: rgba(63,174,106,0.18);
+    color: var(--win);
+}
+
+.type-badge.tx-push {
+    background: rgba(201,162,39,0.18);
+    color: var(--brass-light);
+}
+
+.type-badge.tx-admin {
+    background: rgba(31,92,138,0.25);
+    color: #6fa8dc;
+}
+
+.amount-positive {
+    color: var(--win);
+    font-weight: 700;
+}
+
+.amount-negative {
+    color: var(--lose);
+    font-weight: 700;
 }

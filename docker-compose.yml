@@ -8,7 +8,6 @@ services:
 
     restart: always
 
-
     environment:
 
       MYSQL_DATABASE: blackjack_database
@@ -19,16 +18,13 @@ services:
 
       MYSQL_ROOT_PASSWORD: root_password
 
-
     ports:
 
       - "3307:3306"
 
-
     volumes:
 
       - mysql_data:/var/lib/mysql
-
 
 
 volumes:

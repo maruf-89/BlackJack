@@ -26,9 +26,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfig {
 
-
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
 
     public SecurityConfig(
             JwtAuthenticationFilter jwtAuthenticationFilter
@@ -38,13 +36,10 @@ public class SecurityConfig {
 
     }
 
-
-
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http
     ) throws Exception {
-
 
         http
 
@@ -65,6 +60,7 @@ public class SecurityConfig {
                                 "/admin.html",
                                 "/highscore.html",
                                 "/profile.html",
+                                "/transactions.html",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**"
@@ -107,15 +103,12 @@ public class SecurityConfig {
     }
 
 
-
     @Bean
     public PasswordEncoder passwordEncoder() {
 
         return new BCryptPasswordEncoder();
 
     }
-
-
 
     @Bean
     public AuthenticationManager authenticationManager(

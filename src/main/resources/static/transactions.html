@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Transaktioner — Table Royale</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<div class="game wide">
+
+    <nav id="mainNav" class="main-nav"></nav>
+
+    <h1>♠ Transaktioner ♠</h1>
+    <p class="subtitle">Din insats- och vinsthistorik</p>
+
+    <div class="panel">
+
+        <div id="tx-loggedOut" class="state-message">
+            <p>Du måste logga in för att se den här sidan.</p>
+            <a class="primary-link" href="/">Gå till inloggning</a>
+        </div>
+
+        <div id="tx-loading" class="state-message">
+            <p>Laddar transaktioner…</p>
+        </div>
+
+        <div id="tx-empty" class="state-message">
+            <p>Inga transaktioner ännu — starta ett spel för att se historik här.</p>
+        </div>
+
+        <div id="tx-error" class="state-message">
+            <p>Kunde inte hämta transaktioner just nu.</p>
+        </div>
+
+        <div id="tx-table" class="table-wrap">
+            <table class="admin-table">
+                <thead>
+                <tr>
+                    <th>Datum</th>
+                    <th>Typ</th>
+                    <th>Belopp</th>
+                </tr>
+                </thead>
+                <tbody id="transactionTableBody"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="/js/auth.js"></script>
+<script src="/js/transactions.js"></script>
+
+</body>
+</html>

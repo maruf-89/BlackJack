@@ -2,6 +2,7 @@ package blackjack.service;
 
 import blackjack.dto.HighscoreEntry;
 import blackjack.dto.RegisterRequest;
+import blackjack.dto.TransactionResponse;
 import blackjack.entity.Role;
 import blackjack.entity.Transaction;
 import blackjack.entity.User;
@@ -46,6 +47,15 @@ public class UserService {
                 .toList();
     }
 
+    public List<TransactionResponse> getTransactions(String username) {
+        User user = findByUsername(username);
+
+        return transactionRepository.findByUserOrderByCreatedAtDesc(user)
+                .stream()
+                .map(t -> new TransactionResponse(t.getId(), t.getAmount(), t.getType(), t.getCreatedAt()))
+                .toList();
+    }
+
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found: " + username));
@@ -63,21 +73,6 @@ public class UserService {
         user.setBalance(new BigDecimal("1000.00"));
 
         return userRepository.save(user);
-    }
-
-    public void changePassword(String username, String currentPassword, String newPassword) {
-        if (newPassword == null || newPassword.length() < 4) {
-            throw new RuntimeException("New password must be at least 4 characters");
-        }
-
-        User user = findByUsername(username);
-
-        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
-            throw new RuntimeException("Current password is incorrect");
-        }
-
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
     }
 
     public User makeAdmin(Long userId) {
@@ -112,5 +107,20 @@ public class UserService {
         transactionRepository.save(transaction);
 
         return user;
+    }
+
+    public void changePassword(String username, String currentPassword, String newPassword) {
+        if (newPassword == null || newPassword.length() < 4) {
+            throw new RuntimeException("New password must be at least 4 characters");
+        }
+
+        User user = findByUsername(username);
+
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new RuntimeException("Current password is incorrect");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 }

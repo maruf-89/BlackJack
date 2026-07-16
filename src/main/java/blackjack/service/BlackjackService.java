@@ -4,6 +4,7 @@ import blackjack.dto.GameResponse;
 import blackjack.entity.Card;
 import blackjack.entity.Game;
 import blackjack.entity.GameRound;
+import blackjack.entity.Transaction;
 import blackjack.entity.User;
 import blackjack.game.BlackjackGame;
 import blackjack.game.GameResult;
@@ -12,6 +13,7 @@ import blackjack.game.GameStatus;
 import blackjack.repository.CardRepository;
 import blackjack.repository.GameRepository;
 import blackjack.repository.GameRoundRepository;
+import blackjack.repository.TransactionRepository;
 import blackjack.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
@@ -29,17 +31,20 @@ public class BlackjackService {
     private final GameRepository gameRepository;
     private final GameRoundRepository gameRoundRepository;
     private final CardRepository cardRepository;
+    private final TransactionRepository transactionRepository;
 
     public BlackjackService(
             UserRepository userRepository,
             GameRepository gameRepository,
             GameRoundRepository gameRoundRepository,
-            CardRepository cardRepository
+            CardRepository cardRepository,
+            TransactionRepository transactionRepository
     ) {
         this.userRepository = userRepository;
         this.gameRepository = gameRepository;
         this.gameRoundRepository = gameRoundRepository;
         this.cardRepository = cardRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     @Transactional
@@ -53,6 +58,7 @@ public class BlackjackService {
 
         user.setBalance(user.getBalance().subtract(bet));
         userRepository.save(user);
+        recordTransaction(user, bet.negate(), "BET");
 
         Game game = new Game();
         game.setGameId(UUID.randomUUID().toString());
@@ -220,12 +226,23 @@ public class BlackjackService {
         BigDecimal bet = BigDecimal.valueOf(state.getBet());
 
         if (state.getResult() == GameResult.PLAYER_WIN) {
-            user.setBalance(user.getBalance().add(bet.multiply(BigDecimal.valueOf(2))));
+            BigDecimal winnings = bet.multiply(BigDecimal.valueOf(2));
+            user.setBalance(user.getBalance().add(winnings));
+            userRepository.save(user);
+            recordTransaction(user, winnings, "WIN");
         } else if (state.getResult() == GameResult.DRAW) {
             user.setBalance(user.getBalance().add(bet));
+            userRepository.save(user);
+            recordTransaction(user, bet, "PUSH");
         }
+    }
 
-        userRepository.save(user);
+    private void recordTransaction(User user, BigDecimal amount, String type) {
+        Transaction transaction = new Transaction();
+        transaction.setUser(user);
+        transaction.setAmount(amount);
+        transaction.setType(type);
+        transactionRepository.save(transaction);
     }
 
     private GameResponse response(GameState state) {

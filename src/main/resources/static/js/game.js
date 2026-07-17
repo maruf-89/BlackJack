@@ -93,7 +93,12 @@ function login(username, password) {
         body: JSON.stringify({ username, password })
     })
         .then(r => {
-            if (!r.ok) throw new Error(`Fel användarnamn eller lösenord (${r.status})`);
+            if (r.status === 403) {
+                throw new Error("Det här kontot har blivit avstängt. Kontakta en administratör.");
+            }
+            if (!r.ok) {
+                throw new Error("Fel användarnamn eller lösenord.");
+            }
             return r.text();
         })
         .then(token => {

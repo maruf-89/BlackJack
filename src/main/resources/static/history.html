@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Spelhistorik — Table Royale</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<div class="game wide">
+
+    <nav id="mainNav" class="main-nav"></nav>
+
+    <h1>♠ Spelhistorik ♠</h1>
+    <p class="subtitle">Dina tidigare omgångar</p>
+
+    <div class="panel">
+
+        <div id="history-loggedOut" class="state-message">
+            <p>Du måste logga in för att se den här sidan.</p>
+            <a class="primary-link" href="/">Gå till inloggning</a>
+        </div>
+
+        <div id="history-loading" class="state-message">
+            <p>Laddar spelhistorik…</p>
+        </div>
+
+        <div id="history-empty" class="state-message">
+            <p>Inga spelade omgångar ännu — starta ett spel för att se historik här.</p>
+        </div>
+
+        <div id="history-error" class="state-message">
+            <p>Kunde inte hämta spelhistoriken just nu.</p>
+        </div>
+
+        <div id="history-table" class="table-wrap">
+            <table class="admin-table">
+                <thead>
+                <tr>
+                    <th>Datum</th>
+                    <th>Insats</th>
+                    <th>Dina kort</th>
+                    <th>Givens kort</th>
+                    <th>Poäng</th>
+                    <th>Resultat</th>
+                </tr>
+                </thead>
+                <tbody id="historyTableBody"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="/js/auth.js"></script>
+<script src="/js/history.js"></script>
+
+</body>
+</html>

@@ -61,6 +61,7 @@ public class SecurityConfig {
                                 "/highscore.html",
                                 "/profile.html",
                                 "/transactions.html",
+                                "/history.html",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**"

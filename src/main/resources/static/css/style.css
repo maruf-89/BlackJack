@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=Manrope:wght@400;500;600;700;800&display=swap');
 
 :root {
@@ -154,6 +153,7 @@ input:focus {
 .chip[data-val="25"] { background: #1f5c8a; }
 .chip[data-val="50"] { background: #1f7a4c; }
 .chip[data-val="100"] { background: var(--ink); border-color: var(--brass-light); }
+
 
 .auth-panel {
     padding: 26px 28px;
@@ -461,7 +461,6 @@ button:disabled {
     text-transform: uppercase;
 }
 
-
 .empty-hint {
     text-align: center;
     color: rgba(248,243,230,0.4);
@@ -762,4 +761,31 @@ button.ghost.small {
 button.ghost.danger {
     border-color: rgba(193,68,58,0.5);
     color: var(--lose);
+}
+
+.cards-cell {
+    white-space: nowrap;
+}
+
+.mini-card {
+    display: inline-block;
+    background: var(--cream);
+    color: var(--ink);
+    font-weight: 800;
+    font-size: 13px;
+    padding: 3px 7px;
+    border-radius: 6px;
+    margin: 2px;
+}
+
+.mini-card.red {
+    color: var(--burgundy);
+}
+
+.mini-card.black {
+    color: var(--ink);
+}
+
+.no-cards {
+    color: rgba(248,243,230,0.4);
 }

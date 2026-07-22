@@ -1,5 +1,6 @@
 package blackjack.service;
 
+import blackjack.dto.GameHistoryEntry;
 import blackjack.dto.GameResponse;
 import blackjack.entity.Card;
 import blackjack.entity.Game;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -109,6 +111,51 @@ public class BlackjackService {
     public GameResponse getGame(String gameId) {
         BlackjackGame game = loadGame(gameId);
         return response(game.getState());
+    }
+
+    public List<GameHistoryEntry> getHistory(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+
+        List<Game> games = gameRepository.findByUser(user);
+
+        return games.stream()
+                .sorted(Comparator.comparing(Game::getCreatedAt).reversed())
+                .map(this::toHistoryEntry)
+                .toList();
+    }
+
+    private GameHistoryEntry toHistoryEntry(Game game) {
+        GameRound round = gameRoundRepository
+                .findTopByGameOrderByRoundNumberDesc(game)
+                .orElse(null);
+
+        List<String> playerCards = new ArrayList<>();
+        List<String> dealerCards = new ArrayList<>();
+
+        if (round != null) {
+            for (Card card : cardRepository.findByGameRound(round)) {
+                String display = card.getCardRank() + " of " + card.getSuit();
+
+                if ("PLAYER".equals(card.getOwner())) {
+                    playerCards.add(display);
+                } else {
+                    dealerCards.add(display);
+                }
+            }
+        }
+
+        return new GameHistoryEntry(
+                game.getGameId(),
+                game.getBetAmount(),
+                game.getStatus(),
+                game.getResult(),
+                game.getPlayerScore(),
+                game.getDealerScore(),
+                playerCards,
+                dealerCards,
+                game.getCreatedAt()
+        );
     }
 
     private BlackjackGame loadGame(String gameId) {
